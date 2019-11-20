@@ -51,7 +51,7 @@ with open('leaseList.txt', 'w'):
 newLeases = []
 with open('leaseList.txt', 'w') as f:
     for lease in currentLeases:
-        f.write(f'{lease}\n')
+        f.write('{}\n'.format(lease))
         if (len(lease) > 0) and (lease not in leaseList):
             newLeases.append(lease)
 
