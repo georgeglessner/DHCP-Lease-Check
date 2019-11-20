@@ -37,6 +37,7 @@ if os.stat('leaseList.txt').st_size == 0:
         for lease in currentLeases:
             if len(lease) > 0:
                 w.write('{}\n'.format(lease))
+    w.close()
 
 # create lease list array from leaseList.txt
 leaseList = [line.rstrip('\n') for line in open('leaseList.txt')]
@@ -57,7 +58,6 @@ with open('leaseList.txt', 'w') as f:
 
 
 f.close()
-
 
 # send e-mail with new leases
 if len(newLeases) > 0:
