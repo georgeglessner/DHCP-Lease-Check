@@ -11,7 +11,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(SERVER, username=USER, password=PASSWORD)
 stdin, stdout, ssh_stderr = ssh.exec_command('cat /tmp/dnsmasq.leases')
 
-# get current leases
+# get current leases from ssh command
 leases = stdout.read().decode('utf-8')
 stdin.flush()
 ssh.close()
@@ -21,17 +21,18 @@ ssh.close()
 if not os.path.exists('./leaseList.txt'):
     open('leaseList.txt', 'a').close()
 
-# current leases
+# initialize current leases array
 currentLeases = []
 
-# get current leases
+# get current leases MAC addresses
+# add to currentLeases array
 for lease in leases.split('\n'):
     if len(lease) > 0:
         leaseCheck = re.compile('(?:[0-9a-fA-F]:?){12}')
         activeLeases = re.findall(leaseCheck, lease)
         currentLeases.append(activeLeases[0])
 
-# create leaseList.txt file
+# add current leases to leaseList.txt if empty
 if os.stat('leaseList.txt').st_size == 0:
     with open('leaseList.txt', 'w') as w:
         for lease in currentLeases:
@@ -48,15 +49,13 @@ with open('leaseList.txt', 'w'):
 
 
 # find any new leases, add to array
-# also create new leaseList.txt
+# add new leases to leaseList.txt
 newLeases = []
 with open('leaseList.txt', 'w') as f:
     for lease in currentLeases:
         f.write('{}\n'.format(lease))
         if (len(lease) > 0) and (lease not in leaseList):
             newLeases.append(lease)
-
-
 f.close()
 
 # send e-mail with new leases
