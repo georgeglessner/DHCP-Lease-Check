@@ -36,7 +36,7 @@ if os.stat('leaseList.txt').st_size == 0:
     with open('leaseList.txt', 'w') as w:
         for lease in currentLeases:
             if len(lease) > 0:
-                w.write(f'{lease}\n')
+                w.write('{}\n'.format(lease))
 
 # create lease list array from leaseList.txt
 leaseList = [line.rstrip('\n') for line in open('leaseList.txt')]
